@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  api:
+    container_name: container_api
+    build: ./node/app
+    ports: 
+      - "8000:8000"
+    container_name: container_api
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    restart: always
+    depends_on:
+      - redis
+  redis:
+    image: redis:5.0.5-alpine
+    restart: always
+    volumes:
+      - redis_data:/data
+  fe:
+    container_name: container_fe
+    build: ./react/app
+    restart: always
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - api
+volumes:
+  redis_data:
+  
