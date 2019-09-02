@@ -1,0 +1,22 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12.9.1
+    working_directory: ~/comunitius
+    steps:
+      - checkout
+      - save_cache:
+          key: v001-comunitius-{{ checksum "react/app/package-lock.json" }}
+          paths: 
+            - react/app
+      - restore_cache:
+          keys:
+            - v001-comunitius-{{ checksum "react/app/package-lock.json" }}
+            - v001-comunitius
+      - run:
+          name: front-end unit tests
+          command: cd react/app && npm install && npm run test
+      - run:
+          name: front-end build for production
+          command:  cd react/app && npm run build
